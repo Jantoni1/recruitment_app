@@ -1,0 +1,6 @@
+*.class
+.env
+target/*
+*/target/*
+*.iml
+.idea/*
