@@ -1,61 +1,21 @@
 version: '3.7'
 
 services:
-  rabbitmq:
-    container_name: ${RABBITMQ_CONTAINER_NAME}
-    image: bitnami/rabbitmq:3.8
-    env_file: .env
-    environment:
-      RABBITMQ_PASSWORD: ${RABBITMQ_PASS}
-      RABBITMQ_USERNAME: ${RABBITMQ_USER}
-    ports:
-      - ${RABBITMQ_PORT_EPMD_EXTERNAL}:4369
-      - ${RABBITMQ_PORT_CLI_EXTERNAL}:25672
-      - ${RABBITMQ_PORT_HTTP_EXTERNAL}:15672
-      - ${RABBITMQ_PORT_AMQP_EXTERNAL}:5672
-    networks:
-      - recruitment_app_net
-
-
-  redis:
-    container_name: ${REDIS_CONTAINER_NAME}
-    image: redis:alpine
-    env_file: .env
-    environment: []
-    ports:
-      - ${REDIS_PORT_EXTERNAL}:3306
-    networks:
-      - recruitment_app_net
-
-
-  mailcatcher:
-    container_name: ${MAIL_CONTAINER_NAME}
-    image: jeanberu/mailcatcher
-    env_file: .env
-    environment: []
-    ports:
-      - ${MAIL_SMTP_PORT}:1025
-      - ${MAIL_HTTP_PORT}:1080
-    networks:
-      - recruitment_app_net
-
 
   postgres:
-    container_name: ${DB_CONTAINER_NAME}
-    build:
-      context: ""
-      dockerfile: postgres.Dockerfile
+    container_name: ${TRANSACTION_DB_CONTAINER_NAME}
     env_file: .env
     environment:
-      POSTGRES_PASSWORD: ${DB_PASS}
-      POSTGRES_USER: ${DB_USER}
-      PGDATA: /data/postgres
+      POSTGRES_PASSWORD: ${TRANSACTION_DB_PASS}
+      POSTGRES_USER: ${TRANSACTION_DB_USER}
+    image: postgres:13.3-alpine
+    restart: unless-stopped
     ports:
-      - ${DB_PORT_EXTERNAL}:5432
+      - ${TRANSACTION_DB_PORT_EXTERNAL}:5432
     networks:
       - recruitment_app_net
-
-
+    volumes:
+      - ./docker/POSTGRES/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 networks:
   recruitment_app_net:
