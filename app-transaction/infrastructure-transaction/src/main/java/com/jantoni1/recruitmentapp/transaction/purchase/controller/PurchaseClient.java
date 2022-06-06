@@ -26,7 +26,7 @@ public interface PurchaseClient {
                             schema = @Schema(implementation = Purchase.class)
                     )
             ),
-            @ApiResponse(responseCode = "404", description = "Purchase not found",
+            @ApiResponse(responseCode = "404", description = "Purchase/Customer not found",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ApiError.class)
@@ -36,7 +36,7 @@ public interface PurchaseClient {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ApiError.class)
                     )),
-            @ApiResponse(responseCode = "404", description = "Customer not found",
+            @ApiResponse(responseCode = "422", description = "Invalid update request data",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ApiError.class)
