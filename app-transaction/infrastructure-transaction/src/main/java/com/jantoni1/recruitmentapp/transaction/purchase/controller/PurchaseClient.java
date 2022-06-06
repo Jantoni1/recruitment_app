@@ -31,6 +31,16 @@ public interface PurchaseClient {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ApiError.class)
                     )),
+            @ApiResponse(responseCode = "422", description = "Invalid update request data",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiError.class)
+                    )),
+            @ApiResponse(responseCode = "404", description = "Customer not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiError.class)
+                    )),
             @ApiResponse(responseCode = "400", description = "Invalid purchase id supplied", content = @Content)
     })
     @PutMapping(
@@ -46,8 +56,19 @@ public interface PurchaseClient {
                             mediaType = "application/json",
                             schema = @Schema(implementation = Purchase.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "422", description = "Invalid update request data",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiError.class)
+                    )),
+            @ApiResponse(responseCode = "404", description = "Customer not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiError.class)
+                    )),
     })
+
     @PostMapping(consumes = {"application/json"})
     Purchase create(@RequestBody() PurchaseCreate create);
 
