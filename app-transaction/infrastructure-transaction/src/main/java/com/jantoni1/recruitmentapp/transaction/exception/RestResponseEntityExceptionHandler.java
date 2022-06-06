@@ -5,6 +5,7 @@ import com.jantoni1.recruitmentapp.transaction.exception.error.ApiError;
 import com.jantoni1.recruitmentapp.transaction.exception.error.ApiSubError;
 import com.jantoni1.recruitmentapp.transaction.exception.error.ApiValidationError;
 import com.jantoni1.recruitmentapp.transaction.purchase.exception.PurchaseNotFoundException;
+import com.jantoni1.recruitmentapp.transaction.shared.RuntimeAppException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,19 +25,8 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {PurchaseNotFoundException.class})
-    protected ResponseEntity<ApiError> handlePurchaseNotFound(PurchaseNotFoundException ex) {
-        var notFoundStatus = HttpStatus.NOT_FOUND;
-        return ResponseEntity
-                .status(notFoundStatus)
-                .body(ApiError.builder()
-                        .message(ex.getLocalizedMessage())
-                        .httpStatus(notFoundStatus)
-                        .build());
-    }
-
-    @ExceptionHandler(value = {CustomerNotFoundException.class})
-    protected ResponseEntity<ApiError> handleCustomerNotFound(CustomerNotFoundException ex) {
+    @ExceptionHandler(value = {RuntimeAppException.class})
+    protected ResponseEntity<ApiError> handlePurchaseNotFound(RuntimeAppException ex) {
         var notFoundStatus = HttpStatus.NOT_FOUND;
         return ResponseEntity
                 .status(notFoundStatus)
@@ -59,16 +49,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                         .build());
     }
 
-//    @ExceptionHandler(value = {Exception.class})
-//    protected ResponseEntity<ApiError> handleAnyException(Exception ex) {
-//        return ResponseEntity
-//                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                .body(ApiError.builder()
-//                        .message("Unknown error")
-//                        .debugMessage(ex.getLocalizedMessage())
-//                        .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//                        .build());
-//    }
+    @ExceptionHandler(value = {Exception.class})
+    protected ResponseEntity<ApiError> handleAnyException(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiError.builder()
+                        .message("Unknown error")
+                        .debugMessage(ex.getLocalizedMessage())
+                        .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .build());
+    }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body,
